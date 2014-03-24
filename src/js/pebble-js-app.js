@@ -123,7 +123,7 @@ function getWeatherFromLocation(location_name) {
 function getWeatherFromWoeid(woeid) {
   var celsius = options['units'] == 'celsius';
   var query = encodeURI("select item.condition from weather.forecast where woeid = " + woeid +
-                        " and u = " + (celsius ? "\"c\"" : "\"f\""));
+                        " and u = " + (celsius ? "\"c\"" : "\"f\"")); //removed C/F
   var url = "http://query.yahooapis.com/v1/public/yql?q=" + query + "&format=json";
 
   var response;
@@ -135,7 +135,8 @@ function getWeatherFromWoeid(woeid) {
         response = JSON.parse(req.responseText);
         if (response) {
           var condition = response.query.results.channel.item.condition;
-          temperature = condition.temp + (celsius ? "\u00B0C" : "\u00B0F");
+          temperature = condition.temp + (celsius ? "\u00B0" : "\u00B0");
+          //temperature = condition.temp + (celsius ? "\u00B0C" : "\u00B0F");
           icon = imageId[condition.code];
           // console.log("temp " + temperature);
           // console.log("icon " + icon);
@@ -207,6 +208,6 @@ Pebble.addEventListener("ready", function(e) {
   setInterval(function() {
     //console.log("timer fired");
     updateWeather();
-  }, 1800000); // 30 minutes
+  }, 3600000); // EDIT: changed to 60 minutes
   console.log(e.type);
 });
